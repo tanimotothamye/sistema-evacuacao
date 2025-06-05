@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mapa</title>
+
+    <!-- CSS do estilo geral -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- CSS do Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- JS do Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(270deg, #4facfe, #a17fe0, #43e97b, #38f9d7);
+            background-size: 800% 800%;
+            animation: gradientMove 15s ease infinite;
+            overflow: hidden;
+            height: 100vh;
+            justify-content: flex-start;
+            padding-top: 20px;
+            color: white;
+            text-shadow: 1px 1px 3px black;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        #mapa {
+            width: 90%;
+            height: 700px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Blobs decorativos -->
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+
+
+    <h1>Bem-vindo ao mapa</h1>
+    <div id="mapa"></div>
+
+    <script>
+        window.onload = function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (pos) {
+                        const lat = pos.coords.latitude;
+                        const lon = pos.coords.longitude;
+
+                        alert(`Localização obtida:\nLatitude: ${lat}\nLongitude: ${lon}`);
+
+                        const map = L.map('mapa').setView([lat, lon], 13);
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution:
+                                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        }).addTo(map);
+
+                        L.marker([lat, lon])
+                            .addTo(map)
+                            .bindPopup('Você está aqui!')
+                            .openPopup();
+                    },
+                    function () {
+                        alert('Permissão negada ou erro ao obter localização.');
+                    }
+                );
+            } else {
+                alert('Geolocalização não é suportada neste navegador.');
+            }
+        };
+    </script>
+
+</body>
+
+</html>

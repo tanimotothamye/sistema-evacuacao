@@ -2,30 +2,34 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeRoute</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeRoute</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-    <!-- Blobs decorativos -->
-    <div class="blob blob1"></div>
-    <div class="blob blob2"></div>
-    <div class="blob blob3"></div>
+  <!-- Blobs decorativos -->
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
 
-    <div class="container">
+  <div class="container">
 
-        <section>
-            <h1>SafeRoute</h1>
-            <h2>O seu caminho mais seguro.</h2>
-            <button onclick="mostrarEvacuacao()">Começar</button>
-        </section>
+    <section>
+      <h1>SafeRoute</h1>
+      <h2>O seu caminho mais seguro.</h2>
+      <button onclick="abrirPaginaMapa()">Começar</button>
+    </section>
 
-    </div>
+  </div>
 
-    <script src="app.js"></script>
+  <script>
+    function abrirPaginaMapa() {
+      window.location.href = "PaginaMapa.html";
+    }
+  </script>
 
 </body>
 
