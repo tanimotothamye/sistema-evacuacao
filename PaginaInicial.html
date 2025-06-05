@@ -4,30 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Evacuação</title>
+    <title>SafeRoute</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>Sistema Evacuação</h1>
 
-    <section>
-        <h2>Escolha a sua situação:</h2>
-        <button onclick="mostrarEvacuacao()">Sou morador (Evacuação)</button>
-        <button onclick="mostrarDesvio()">Sou motorista (Desvio de rota)</button>
-    </section>
+    <!-- Blobs decorativos -->
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
 
-    <section id="evacuacao" style="display: none;">
-        <h3>Postos de Evacuação Disponíveis</h3>
-        <p>Posto mais próximp: [Exemplo de posto]</p>
-        <p>Rota de ecacuação: [Exemplo de rota]</p>
-    </section>
+    <div class="container">
 
-    <section id="desvio" style="display: none;">
-        <h3>Rota Alternativa</h3>
-        <p>Rota original: [Exemplo de rota]</p>
-        <p>Rota alternativa: [Exemplo de rota alternativa]</p>
-    </section>
+        <section>
+            <h1>SafeRoute</h1>
+            <h2>O seu caminho mais seguro.</h2>
+            <button onclick="mostrarEvacuacao()">Começar</button>
+        </section>
+
+    </div>
 
     <script src="app.js"></script>
 
