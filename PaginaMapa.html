@@ -6,57 +6,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mapa</title>
 
-    <!-- CSS do estilo geral -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- CSS do Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <!-- JS do Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
+        /* Ajustes para o body da PaginaMapa.html para permitir rolagem e layout vertical */
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: flex; /* Mantém o flex para centralizar o conteúdo principal */
+            flex-direction: column; /* Coloca os itens em coluna */
+            align-items: center; /* Centraliza horizontalmente */
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(270deg, #4facfe, #a17fe0, #43e97b, #38f9d7);
+            background: linear-gradient(270deg, #4facfe, #a17fe0, #43e9d7, #38f9d7); /* Cor de fundo */
             background-size: 800% 800%;
             animation: gradientMove 15s ease infinite;
-            overflow: hidden;
-            height: 100vh;
-            justify-content: flex-start;
-            padding-top: 20px;
+            
+            overflow-y: auto; /* Permite rolagem vertical se o conteúdo exceder */
+            overflow-x: hidden; /* Esconde rolagem horizontal */
+            min-height: 100vh; /* Altura mínima de 100% da viewport */
+            height: auto; /* Altura se adapta ao conteúdo */
+            
+            justify-content: flex-start; /* Alinha o conteúdo ao topo */
+            padding-top: 20px; /* Espaçamento do topo */
             color: white;
             text-shadow: 1px 1px 3px black;
         }
 
+        /* Estilo para o container principal do mapa */
+        .map-container {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            text-align: center;
+        }
+
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 50px;
+            color: #fff;
+            font-size: 3rem;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
         }
 
         #mapa {
-            width: 90%;
-            height: 700px;
+            width: 100%;
+            height: 500px; /* Altura fixa para o mapa */
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px; /* Espaço abaixo do mapa */
+        }
+
+        /* Estilo para os botões (consistente com outras páginas) */
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin: 10px; /* Espaço entre os botões */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Ajuste para ícone de seta */
+        .fas.fa-arrow-left {
+            margin-right: 8px;
         }
     </style>
 </head>
 
 <body>
-
-    <!-- Blobs decorativos -->
     <div class="blob blob1"></div>
     <div class="blob blob2"></div>
     <div class="blob blob3"></div>
 
+    <div class="map-container">
+        <h1>Localização Atual</h1>
+        <div id="mapa"></div>
 
-    <h1>Bem-vindo ao mapa</h1>
-    <div id="mapa"></div>
+        <button onclick="window.location.href='PaginaAlertas.html'">
+            <i class="fas fa-bullhorn"></i> Ver Alertas
+        </button>
+
+        <button onclick="window.location.href='PaginaInicial.html'">
+            <i class="fas fa-arrow-left"></i> Voltar à Página Inicial
+        </button>
+    </div>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <script>
         window.onload = function () {
@@ -66,31 +118,52 @@
                         const lat = pos.coords.latitude;
                         const lon = pos.coords.longitude;
 
-                        alert(`Localização obtida:\nLatitude: ${lat}\nLongitude: ${lon}`);
-
+                        // Cria o mapa centrado na posição do usuário
                         const map = L.map('mapa').setView([lat, lon], 13);
 
+                        // Adiciona as tiles (camadas do mapa) do OpenStreetMap
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             maxZoom: 19,
                             attribution:
                                 '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                         }).addTo(map);
 
+                        // Marca a posição do usuário com um marcador
                         L.marker([lat, lon])
                             .addTo(map)
                             .bindPopup('Você está aqui!')
                             .openPopup();
                     },
-                    function () {
-                        alert('Permissão negada ou erro ao obter localização.');
+                    function (err) {
+                        // Alerta para erro ao obter localização
+                        alert('Não foi possível obter sua localização (erro: ' + err.message + '). Por favor, verifique as permissões do navegador. Usando localização padrão (Brasília).');
+                        console.error('Erro de geolocalização (PaginaMapa.html):', err);
+
+                        // Fallback para coordenadas de Brasília se o acesso à localização for negado
+                        const map = L.map('mapa').setView([-15.7942, -47.8822], 13);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+                        // Adicionar marcador da localização padrão
+                        L.marker([-15.7942, -47.8822])
+                            .addTo(map)
+                            .bindPopup('Localização padrão (Brasília)');
                     }
                 );
             } else {
-                alert('Geolocalização não é suportada neste navegador.');
+                // Alerta para navegador sem suporte a geolocalização
+                alert('Seu navegador não suporta geolocalização ou ela está desativada. Usando localização padrão (Brasília).');
+
+                // Default para coordenadas de Brasília
+                const map = L.map('mapa').setView([-15.7942, -47.8822], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+                // Adicionar marcador da localização padrão
+                L.marker([-15.7942, -47.8822])
+                    .addTo(map)
+                    .bindPopup('Localização padrão (Brasília)');
             }
         };
     </script>
-
 </body>
 
 </html>
